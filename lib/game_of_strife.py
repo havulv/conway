@@ -71,28 +71,25 @@ def Check_Neighbors(Live_List, i, j):
     return neighbors
 
 
-def Proliferate(Cur_Gen, neigh_array=[]):
+def Proliferate(Cur_Gen):
     ''' Compute the death and life of my little cell minions!!!'''
 
     # Make a deep copy to return afterwards (Can't change while iterating)
     Next_Gen = [[False for i in  j] for j in Cur_Gen]
     Death_Count = 0
 
-    for i in range(len(Cur_Gen)):
-        for j in range(len(Cur_Gen[i])):
-            # I am arguing that it is okay to pass this list in so many times
-            # because the list is a shared object so I am only creating and
-            # destroying a reference each time the function is called
-            neighbors = Check_Neighbors(Cur_Gen, i, j)
+    for ind, row in enumerate(Cur_Gen):
+        for jind, col in enumerate(row):
+            neighbors = Check_Neighbors(Cur_Gen, ind, jind)
 
-            if (Cur_Gen[i][j] == True and neighbors < 2) or (Cur_Gen[i][j] == True and neighbors > 3):
-                Next_Gen[i][j] = False
-            if ((neighbors == 3 or neighbors == 2) and Cur_Gen[i][j] == True):
-                Next_Gen[i][j] = True
-            if Cur_Gen[i][j] == False and neighbors == 3:
-                Next_Gen[i][j] = True
+            if (col and neighbors < 2) or (col and neighbors > 3):
+                Next_Gen[ind][jind] = False
+            if ((neighbors == 3 or neighbors == 2) and col == True):
+                Next_Gen[ind][jind] = True
+            if not col and neighbors == 3:
+                Next_Gen[ind][jind] = True
 
-        Death_Count += sum(Next_Gen[i])
+        Death_Count += sum(Next_Gen[ind])
 
     return Next_Gen, Death_Count
 
@@ -117,24 +114,14 @@ def repetition_look(Gen_List):
     else:
         return False, []
 
-
 def clear(): os.system('cls' if os.name == 'nt' else 'clear')
-
 
 def Print_Gen(Gen):
     ''' Print Generation to screen '''
+    for row in Gen:
+        print("".join(["& " if col else "  " for col in row]))
 
-    for i in range(len(Gen)):
-        for j in range(len(Gen[i])):
-            if Gen[i][j]:
-                print("& ", end="")
-            else:
-                print("  ", end="")
-        print("")
-    print("")
-
-
-def main_search(size=30, u_bound=0.2, tries=40, time=50):
+def potential_seed(size=30, u_bound=0.2, tries=40, time=50):
     Good_seeds = []
     for i in range(tries):
         Gen = gen_rand_seed(size, u_bound)
@@ -142,91 +129,6 @@ def main_search(size=30, u_bound=0.2, tries=40, time=50):
         if potent_seed:
             Good_seeds.append(potent_seed)
     return Good_seeds
-
-def main_seed(Gen, u_bound=0.2):
-    ''' Run through visuals with a set seed '''
-    done = 1
-    cnt = 0
-    clear()
-    Print_Gen(Gen)
-    while done:
-        time.sleep(.3)
-        Gen, Death = Proliferate(Gen)
-        Print_Gen(Gen)
-        clear()
-        done = Death
-        cnt += 1
-        if cnt == 1000: done = 0
-    clear()
-    end_message(cnt)
-
-
-def main_vis(size=30, u_bound=0.2):
-    ''' Print, clear screen and loop until resolution '''
-
-    Gen = gen_rand_seed(size, u_bound)
-    neigh_array = Gen
-    done = 1
-    cnt = 0
-    while done:
-        time.sleep(.2)
-        clear()
-        Print_Gen(Gen)
-        Gen, Death= Proliferate(Gen)
-        done = Death
-        cnt += 1
-        if cnt == 1000: done = 0
-    end_message(cnt)
-
-
-def main_silent(size=50, u_bound=0.2):
-    ''' A main function for conway's game of life running in the background '''
-
-    Gen = gen_rand_seed(size, u_bound)
-
-    cnt = 0
-    done = 1
-
-    while done:
-        Gen, Death = Proliferate(Gen)
-        done = Death
-        cnt += 1
-        if cnt == 10000: done = 0
-    end_message(cnt)
-
-
-def invalid(): print("Invalid input. Try again or do something else with your time")
-
-
-def default_ret():
-    ''' Trying for functionality... '''
-    for i in [["-v", "[optional: size={mat_size}", "ub={upper bound}]",  "Visual Conway"],
-                      ["-s", "[optional: size={mat_size}", "ub={upper bound}]", "Background Conway"]]:
-        print("{0} -- {1} -- {2} -- {3}".format(i[0], i[1], i[2],i[3]))
-
-
-def read_args(arg1, arg2="", arg3=""):
-    ''' Read in the system arguments associated at runtime '''
-    if arg1 == "-s":
-        check_optionals(main_silent, arg2, arg3)
-
-    elif arg1 == "-v":
-        check_optionals(main_vis, arg2, arg3)
-
-    else:
-        default_ret()
-
-
-def check_optionals(main, arg2, arg3):
-    ''' I'm trying to be a functional programmer '''
-    if arg2[0:4] == "size":
-        if arg3[0:2] == "ub":
-            main(int(arg2[5:]), float(arg3[3:]))
-        else:
-            main(size=int(arg2[5:]))
-    else:
-        main()
-
 
 def gen_rand_seed(size, u_bound):
     ''' Generate a randome seed for the Game '''
@@ -239,7 +141,6 @@ def gen_rand_seed(size, u_bound):
 
     return Gen
 
-
 def end_message(cnt):
     ''' End function for displaying messages'''
     clear()
@@ -249,6 +150,53 @@ def end_message(cnt):
         print("They made it. Gosh darn, they all made it after {} iterations".format(cnt))
     print("Thanks for playing.")
 
+def automata(Gen, done, cnt, opts):
+    if not opts.silent:
+        time.sleep(.2)
+        clear()
+        Print_Gen(Gen)
+    Gen, Death= Proliferate(Gen)
+    done = Death
+    cnt += 1
+    if cnt == 1000: done = 0
+    return Gen, done, cnt
+
+def main():
+    opts = parse_args()
+    print(vars(opts))
+    return
+
+    Gen = gen_rand_seed(opts.size, opts.upper)
+    done = 1
+    cnt = 0
+    while done:
+        Gen, done, cnt = automata(Gen, done, cnt, opts)
+    end_message(cnt)
+
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+            description=("It's Conway's game of life! The classic game"
+            " of cellular automata!"))
+    parser.add_argument(
+        "-sv", "--silent", action='store_true', default=False,
+        help=("Run conway's game without any console output"))
+    parser.add_argument(
+        "-u", "--upper", nargs=1, type=float, help=("Set the "
+            "upper bound for the random generation of cells 0 < upper"
+            " <= 1."), default=0.2)
+    parser.add_argument(
+        "-si", "--size", nargs=1, type=int, help=("Set the size of the"
+            "scare that you would like the cellular automata to exist "
+            "within. Should probably be less than the size of you term"
+            "inal but, as of yet, there is no strict restriction on "
+            "size"), default=25)
+    parser.add_argument(
+        "-s", "--seed", nargs=1, type=int, help=("Start conway with "
+            "a specific seed to get a certain conway going."))
+    opts = parser.parse_args()
+    return opts
 
 if __name__ == "__main__":
     # The hackiest fucking way of doing this
