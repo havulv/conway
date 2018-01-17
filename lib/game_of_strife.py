@@ -5,6 +5,7 @@ import os
 import sys
 import random
 import time
+import argparse
 
 ''' Conway's Game of Life '''
 
@@ -163,10 +164,8 @@ def automata(Gen, done, cnt, opts):
 
 def main():
     opts = parse_args()
-    print(vars(opts))
-    return
 
-    Gen = gen_rand_seed(opts.size, opts.upper)
+    Gen = gen_rand_seed(opts.size[0], opts.upper)
     done = 1
     cnt = 0
     while done:
@@ -200,10 +199,4 @@ def parse_args():
 
 if __name__ == "__main__":
     # The hackiest fucking way of doing this
-    try:
-        args = (i for i in sys.argv[1:])
-        read_args(*args)
-    except TypeError:
-        default_ret()
-
-    sys.exit(0)
+    main()
