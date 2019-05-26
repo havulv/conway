@@ -1,11 +1,11 @@
 
-Conway's Game of Strife
-=======================
+# Conway's Game of Strife
 
 Or, yet another implementation of [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life).
 
-Usage
------
+## Installation
+
+## Usage
 
 Two modes, silent and visual/verbose, and two options to set the square size and upper bound for random generation.
 
@@ -25,5 +25,4 @@ Two modes, silent and visual/verbose, and two options to set the square size and
 
     >python game_of_strife.py -s size={N} ub={0<=n}
 ```
-
 
