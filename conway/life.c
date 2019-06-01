@@ -396,7 +396,8 @@ int main(int argv, char *argc[]) {
 #if defined _WIN32 || _WIN64
                 offsety = positiony(std_out) + 1; // Never defined for unix
 #else
-                offsety = positiony() + 1; // Also, what happened to positionx?
+                printf("Not implemented for Unix.");
+//                offsety = positiony() + 1; // Also, what happened to positionx?
 #endif
             } else goto help;
 
