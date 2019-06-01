@@ -1,6 +1,16 @@
 #! /usr/bin/env python3.6
 
-from distutils import setup, find_packages
+from setuptools.command.install import Install
+from setuptools import setup, find_packages
+
+import subprocess as sbp
+
+
+class MakeLife(Install):
+    def run(self):
+        sbp.run(["make"])
+        Install.run(self)
+
 
 setup(name='conway',
       version='1.0.0',
@@ -11,4 +21,5 @@ setup(name='conway',
       author="John Andersen",
       author_email="johnandersen185@gmail.com",
       description="Some fun with conway's game of life! Try out some celullar automata.",
-      install_requires=[])
+      install_requires=[],
+      cmdclass={'install': MakeLife})
