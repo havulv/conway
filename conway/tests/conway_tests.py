@@ -1,9 +1,9 @@
 #! /usr/bin/env python3.7
 
 try:
-    from .. import strife
+    from ..conway import strife
 except ImportError:
-    import strife
+    import conway.strife as strife
 
 from parameterized import parameterized
 # from unittest.mock import patch # for sys.stderr string patching
@@ -30,13 +30,13 @@ class ConwayUnitTests(unittest.TestCase):
 
     @unittest.skip('Not yet written')
     @parameterized.expand([], skip_on_empty=True)
-    def test_main_conway_through(self, name, val):
+    def test_main_conway_through(self):
         strife.main(strife.parse_args(['-s']))
         assert True
 
 
 class ConwayFunctionalTests(unittest.TestCase):
 
-    def test_main_conway_through(self, name, val):
-        strife.main(strife.parse_args(['-s']))
+    def test_main_conway_through(self):
+        strife.main(strife.parse_args(['-sv']))
         assert True
