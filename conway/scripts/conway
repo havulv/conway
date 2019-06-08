@@ -1,0 +1,7 @@
+#! /usr/bin/env python3.7
+
+import conway
+import sys
+
+if __name__ == "__main__":
+    conway.main(conway.parse_args(sys.argv[1:]))
