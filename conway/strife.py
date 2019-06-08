@@ -172,11 +172,22 @@ def automata(generation, done, cnt, opts):
 
 def main(args):
 
-    generation = generation_rand_seed(args.size, args.upper)
-    done = 1
-    cnt = 0
-    while done:
-        generation, done, cnt = automata(generation, done, cnt, args)
+    if args.fast:
+        # Check that life is compiled
+        # if it is not compiled issue a runtime error
+        #   -- compliation should happen at build/install time
+        # if it is compiled then format the arguments to pass to
+        #   -- pass over argv  & subprocess
+        #       -- Note, I am not forking the process for portability
+        #       -- As well, we need to capture the output aftewards
+        print("Not yet implemented")
+        cnt = 0
+    else:
+        generation = generation_rand_seed(args.size, args.upper)
+        done = 1
+        cnt = 0
+        while done:
+            generation, done, cnt = automata(generation, done, cnt, args)
     end_message(cnt)
 
 
@@ -202,7 +213,10 @@ def parse_args(args):
         "-s", "--seed", nargs=1, type=int,
         help=("Start conway with a specific seed to get a"
               " certain conway going."))
-
+    parser.add_argument(
+        "-f", "--fast", action='store_true',
+        help=("Use the C version for faster output and running. "
+              "Please note that this is experimental."))
     return parser.parse_args(args)
 
 
