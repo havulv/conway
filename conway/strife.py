@@ -23,55 +23,55 @@ def check_close(living, i, j):
     # Middle Pieces
     if 0 < i < col_len and 0 < j < row_len:
         for k in range(-1, 2):
-            neighbors += sum(living[i+k][j-1:j+2])
+            neighbors += sum(living[i + k][j - 1:j + 2])
         neighbors -= living[i][j]
 
     # Top Piece
     elif i == 0 and 0 < j < row_len:
-        for k in range(0,2):
-            neighbors += sum(living[i+k][j-1:j+2])
-        neighbors += sum(living[-1][j-1:j+2])
+        for k in range(0, 2):
+            neighbors += sum(living[i + k][j - 1:j + 2])
+        neighbors += sum(living[-1][j - 1:j + 2])
         neighbors -= living[i][j]
 
     # Bottom Piece
     elif i == col_len and 0 < j < row_len:
-        for k in range(-1,1):
-            neighbors += sum(living[i+k][j-1:j+2])
-        neighbors += sum(living[0][j-1:j+2])
+        for k in range(-1, 1):
+            neighbors += sum(living[i + k][j - 1:j + 2])
+        neighbors += sum(living[0][j - 1:j + 2])
         neighbors -= living[i][j]
 
     # Left Side
     elif 0 < i < col_len and j == 0:
-        for k in range(-1,2):
-            neighbors += sum(living[i+k][j:j+2])
-            neighbors += living[i+k][-1]
+        for k in range(-1, 2):
+            neighbors += sum(living[i + k][j:j + 2])
+            neighbors += living[i + k][-1]
         neighbors -= living[i][j]
 
     # Right Side
     elif 0 < i < col_len and j == row_len:
-        for k in range(-1,2):
-            neighbors += sum(living[i+k][j-1:j+1])
-            neighbors += living[i+k][0]
+        for k in range(-1, 2):
+            neighbors += sum(living[i + k][j - 1:j + 1])
+            neighbors += living[i + k][0]
         neighbors -= living[i][j]
 
     # Top Left Corner
     elif i == 0 and j == 0:
-        neighbors += living[i][j+1] + living[i+1][j+1] + living[i+1][j]
+        neighbors += living[i][j + 1] + living[i + 1][j + 1] + living[i + 1][j]
         neighbors += living[i][-1] + living[-1][-1] + living[-1][j]
 
     # Top Right Corner
     elif i == 0 and j == row_len:
-        neighbors += living[i][j-1] + living[i+1][j-1] + living[i+1][j]
+        neighbors += living[i][j - 1] + living[i + 1][j - 1] + living[i + 1][j]
         neighbors += living[i][0] + living[-1][-1] + living[-1][j]
 
     # Bottom Right Corner
     elif i == col_len and j == row_len:
-        neighbors += living[i][j-1] + living[i-1][j-1] + living[i-1][j]
+        neighbors += living[i][j - 1] + living[i - 1][j - 1] + living[i - 1][j]
         neighbors += living[0][0] + living[-1][0] + living[0][-1]
 
     # Bottom Left Corner
-    elif i ==col_len and j == 0:
-        neighbors += living[i][j+1] + living[i-1][j+1] + living[i-1][j]
+    elif i == col_len and j == 0:
+        neighbors += living[i][j + 1] + living[i - 1][j + 1] + living[i - 1][j]
         neighbors += living[0][j] + living[-1][-1] + living[0][-1]
 
     return neighbors
@@ -182,24 +182,26 @@ def main(args):
 
 def parse_args(args):
     parser = argparse.ArgumentParser(
+        prog='conway',
         description=("It's Conway's game of life! The classic game"
                      " of cellular automata!"))
     parser.add_argument(
         "-sv", "--silent", action='store_true', default=False,
         help=("Run conway's game without any console output"))
     parser.add_argument(
-        "-u", "--upper", nargs=1, type=float, help=("Set the "
-            "upper bound for the random generation of cells 0 < upper"
-            " <= 1."), default=0.2)
+        "-u", "--upper", nargs=1, type=float,
+        help=("Set the upper bound for the random generation of "
+              "cells 0 < upper <= 1."), default=0.2)
     parser.add_argument(
-        "-si", "--size", nargs='?', type=int, help=("Set the size of the"
-            "scare that you would like the cellular automata to exist "
-            "within. Should probably be less than the size of you term"
-            "inal but, as of yet, there is no strict restriction on "
-            "size"), default=25)
+        "-si", "--size", nargs='?', type=int,
+        help=("Set the size of the arena that you would like the"
+              " cellular automata to exist within. Should probably "
+              "be less than the size of you terminal but, as of yet,"
+              " there is no strict restriction on size"), default=25)
     parser.add_argument(
-        "-s", "--seed", nargs=1, type=int, help=("Start conway with "
-            "a specific seed to get a certain conway going."))
+        "-s", "--seed", nargs=1, type=int,
+        help=("Start conway with a specific seed to get a"
+              " certain conway going."))
 
     return parser.parse_args(args)
 
