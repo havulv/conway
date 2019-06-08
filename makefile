@@ -1,5 +1,7 @@
 #! /usr/bin/env make 
 
+# TODO: update to recognize major compilers installed
+
 SRC = ./conway/
 DEST = ./conway/scripts/
 

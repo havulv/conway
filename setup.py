@@ -1,15 +1,15 @@
 #! /usr/bin/env python3.6
 
-from setuptools.command.install import Install
+from setuptools.command.install import install
 from setuptools import setup, find_packages
 
 import subprocess as sbp
 
 
-class MakeLife(Install):
+class MakeLife(install):
     def run(self):
         sbp.run(["make"])
-        Install.run(self)
+        install.run(self)
 
 
 setup(name='conway',
